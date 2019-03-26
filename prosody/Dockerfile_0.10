@@ -1,0 +1,16 @@
+FROM ubuntu:latest
+RUN apt-get -qq update; apt-get -qqy install mercurial
+RUN hg clone https://hg.prosody.im/prosody-modules/ /usr/lib/prosody/extra-modules/
+
+FROM prosody/prosody:0.10
+USER root
+COPY --from=0 /usr/lib/prosody/extra-modules/ /usr/lib/prosody/extra-modules/
+RUN apt-get -qq update; apt-get -qqy install lua-ldap lua-socket lua-sec lua-event lua-dbi-mysql
+
+ENV EXTRA_MODULES "blocking smacks csi csi_pump track_muc_joins presence_cache smacks_offline cloud_notify auth_ldap http_upload omemo_all_access pep_vcard_avatar migrate mam_muc vcard_muc"
+RUN for MOD in ${EXTRA_MODULES}; do ln -s /usr/lib/prosody/extra-modules/mod_${MOD} /usr/lib/prosody/modules/; done
+
+# add to external group: ssl-cert (115)
+RUN groupadd -g 115 ssl-cert-ex; usermod -a -G ssl-cert-ex prosody
+
+USER prosody
