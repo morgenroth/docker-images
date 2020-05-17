@@ -15,5 +15,3 @@ RUN dpkg -i /tmp/lua-ldap_1.2.3-1_amd64.deb
 
 # add to external group: ssl-cert (115)
 RUN groupadd -g 115 ssl-cert-ex; usermod -a -G ssl-cert-ex prosody
-
-USER prosody
