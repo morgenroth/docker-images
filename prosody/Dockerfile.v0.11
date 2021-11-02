@@ -2,7 +2,7 @@ FROM ubuntu:latest
 RUN apt-get -qq update; apt-get -qqy install mercurial
 RUN hg clone https://hg.prosody.im/prosody-modules/ /usr/lib/prosody/extra-modules/
 
-FROM prosody/prosody:0.11
+FROM prosody/prosody:0.11.9
 USER root
 COPY --from=0 /usr/lib/prosody/extra-modules/ /usr/lib/prosody/extra-modules/
 RUN apt-get -qq update; apt-get -qqy install luarocks
@@ -22,7 +22,7 @@ RUN /usr/local/bin/luarocks install luaevent
 RUN apt-get -qqy install libmariadb-dev libmariadb-dev-compat
 RUN /usr/local/bin/luarocks install luadbi-mysql MYSQL_INCDIR=/usr/include/mariadb/
 
-ENV EXTRA_MODULES "bookmarks blocking smacks csi csi_battery_saver track_muc_joins presence_cache cloud_notify auth_ldap http_upload omemo_all_access pep_vcard_avatar migrate muc_mam vcard_muc turncredentials alias conversejs"
+ENV EXTRA_MODULES "bookmarks blocking smacks csi csi_battery_saver track_muc_joins presence_cache cloud_notify auth_ldap http_upload http_upload_external omemo_all_access pep_vcard_avatar migrate muc_mam vcard_muc turncredentials alias conversejs firewall"
 RUN for MOD in ${EXTRA_MODULES}; do ln -s /usr/lib/prosody/extra-modules/mod_${MOD} /usr/lib/prosody/modules/; done
 
 # add to external group: ssl-cert (115)
