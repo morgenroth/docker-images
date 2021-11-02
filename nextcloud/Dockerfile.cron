@@ -1,3 +1,3 @@
-FROM nextcloud:fpm
+FROM nextcloud:stable-fpm
 RUN echo "23 */2 * * * php -d memory_limit=2G -f /var/www/html/occ preview:pre-generate" >> /var/spool/cron/crontabs/www-data
 RUN echo "0 1 * * * php -f /var/www/html/occ app:update --all" >> /var/spool/cron/crontabs/www-data
